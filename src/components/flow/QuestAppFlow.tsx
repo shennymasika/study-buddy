@@ -24,12 +24,28 @@ export const QuestAppFlow: React.FC = () => {
   // Navigation Flow: 'home' | 'topics' | 'levels' | 'quiz' | 'result' | 'leaderboard'
   const [currentScreen, setCurrentScreen] = useState<'home' | 'topics' | 'levels' | 'quiz' | 'result' | 'leaderboard'>('home');
 
+  // Check for PHP session user if running under PHP backend
+  const phpUser = typeof window !== 'undefined' && (window as any).PHP_USER ? (window as any).PHP_USER : null;
+
   // Player Game State
-  const [hearts, setHearts] = useState(initialQuizData.game_mechanics.hearts_and_lives.starting_hearts);
+  const [hearts, setHearts] = useState(
+    phpUser?.hearts ?? initialQuizData.game_mechanics.hearts_and_lives.starting_hearts
+  );
   const [isHeartsShaking, setIsHeartsShaking] = useState(false);
-  const [xp, setXp] = useState(0);
-  const [streak, setStreak] = useState(0);
+  const [xp, setXp] = useState(phpUser?.xp ?? 0);
+  const [streak, setStreak] = useState(phpUser?.streak ?? 0);
   const [isOutOfHeartsOpen, setIsOutOfHeartsOpen] = useState(false);
+
+  // Sync to PHP backend helper
+  const syncWithBackend = (newXp: number, newStreak: number, newHearts: number) => {
+    if (phpUser) {
+      fetch('index.php?api=save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ xp: newXp, streak: newStreak, hearts: newHearts }),
+      }).catch(() => {});
+    }
+  };
 
   // Selected Topic & Level for active gameplay
   const [selectedTopic, setSelectedTopic] = useState<Topic>(initialQuizData.topics[0]);
@@ -73,23 +89,24 @@ export const QuestAppFlow: React.FC = () => {
       const newStreak = streak + 1;
       const isStreakBonus = newStreak % 3 === 0;
       const totalGain = questionXp + (isStreakBonus ? 5 : 0);
+      const updatedXp = xp + totalGain;
 
-      setXp((prev) => prev + totalGain);
+      setXp(updatedXp);
       setLevelXpEarned((prev) => prev + totalGain);
       setStreak(newStreak);
       setLevelCorrectCount((prev) => prev + 1);
+      syncWithBackend(updatedXp, newStreak, hearts);
     } else {
       setIsHeartsShaking(true);
       setTimeout(() => setIsHeartsShaking(false), 500);
       setStreak(0);
       setLevelIncorrectCount((prev) => prev + 1);
-      setHearts((prev) => {
-        const remaining = Math.max(0, prev - 1);
-        if (remaining === 0) {
-          setIsOutOfHeartsOpen(true);
-        }
-        return remaining;
-      });
+      const remaining = Math.max(0, hearts - 1);
+      setHearts(remaining);
+      if (remaining === 0) {
+        setIsOutOfHeartsOpen(true);
+      }
+      syncWithBackend(xp, 0, remaining);
     }
   };
 
@@ -142,7 +159,7 @@ export const QuestAppFlow: React.FC = () => {
             <div className="bg-gradient-to-br from-sky-500 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
               <div className="relative z-10 space-y-4 max-w-lg">
                 <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-white">
-                  <Sparkles className="w-3.5 h-3.5 fill-white" /> Welcome Cadet
+                  <Sparkles className="w-3.5 h-3.5 fill-white" /> Welcome, {phpUser?.username || 'Cadet'}!
                 </span>
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
                   Master Computer Studies the Fun Way!

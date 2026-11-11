@@ -1,20 +1,50 @@
 # Study Buddy — Computer Studies Quest (IST1020)
 
-Gamified learning application skeleton for IST1020 Computer Studies, inspired by Duolingo-style game mechanics with tactile 3D elements, hearts/XP/streak systems, and interactive question evaluation states.
+Gamified learning application for IST1020 Computer Studies, featuring Duolingo-style game mechanics with tactile 3D elements, hearts/XP/streak systems, interactive question evaluation states, and a complete PHP & MySQL backend with session-protected routing.
 
 ---
 
 ## 🚀 Quick Start
 
-To launch the development server locally:
+### 1. Frontend Development (Vite)
+To work on frontend components with instant Hot-Module-Replacement:
 
 ```bash
 npm run dev
 # Or on Windows PowerShell:
 npm.cmd run dev
 ```
+Open `http://localhost:5173` in your browser.
 
-Then open `http://localhost:5173` in your browser.
+---
+
+### 2. Backend Development (PHP & MySQL)
+The project includes a complete PHP backend architecture for user authentication, session protection, and progress persistence:
+
+- **[`login.php`](file:///c:/Users/Administrator/OneDrive/Documents/Study%20buddy%20app/login.php)**: 
+  - Dual-mode: Gamified Login, Registration & Guest Entry UI matching the Study Buddy design, plus a JSON API endpoint (`POST /login.php`) for programmatic authentication.
+- **[`index.php`](file:///c:/Users/Administrator/OneDrive/Documents/Study%20buddy%20app/index.php)**: 
+  - Protected main entry point. Verifies active PHP session (`$_SESSION['user_id']`), redirects unauthenticated users to `login.php`, injects user data (`window.PHP_USER`) into the frontend, and provides REST sync endpoints (`?api=me` and `?api=save`).
+- **[`logout.php`](file:///c:/Users/Administrator/OneDrive/Documents/Study%20buddy%20app/logout.php)**: 
+  - Cleanly destroys the PHP session and redirects back to `login.php`.
+- **[`db.php`](file:///c:/Users/Administrator/OneDrive/Documents/Study%20buddy%20app/db.php)**: 
+  - MySQL PDO connector that automatically initializes the `study_buddy` database and `users` table if they don't already exist. Includes automatic fallback to mock session storage if MySQL is temporarily offline.
+- **[`index.html`](file:///c:/Users/Administrator/OneDrive/Documents/Study%20buddy%20app/index.html)**: 
+  - Vite SPA root template for frontend development and building into `dist/`.
+
+#### How to run with PHP / XAMPP:
+1. **With XAMPP / WampServer**:
+   - Copy or symlink this folder to your `htdocs` directory (e.g., `C:/xampp/htdocs/study-buddy/`).
+   - Start Apache and MySQL in your XAMPP Control Panel.
+   - Open `http://localhost/study-buddy/login.php` or `http://localhost/study-buddy/index.php` in your browser.
+   - **Default Demo Credentials**:
+     - **Student ID**: `STU1020` (or `student@studybuddy.edu`)
+     - **Password**: `password123`
+2. **With PHP Built-in Server**:
+   ```bash
+   php -S localhost:8000
+   ```
+   Open `http://localhost:8000/login.php` in your browser.
 
 ---
 
@@ -53,14 +83,8 @@ The application skeleton is architected into modular, reusable components:
 
 ---
 
-## 🎛️ Dual-Mode Explorer
+## 🎛️ Dual-Mode Frontend Explorer
 
-The application features a toggle at the top navigation bar:
+The frontend features a top navigation toggle:
 1. **Reusable Components & States**: An interactive playground where you can test every button variant, trigger heart losses, add XP, change streak counts, toggle quiz option states in isolation, and test live questions.
 2. **Full App Quest Flow**: An end-to-end playable simulation following the user flow (Home ➔ Topic Map ➔ Level Select ➔ Quiz ➔ Results ➔ Leaderboard).
-
----
-
-## 📚 Ready for IST1020 Lecture Notes
-
-The question engine is structured around the `QuizData` schema in `src/types/quiz.ts` and `src/data/quizData.ts`. When you upload your IST1020 lecture notes, new topics, concepts, key terms, and question banks can be added directly or automatically mapped into the topics array.
