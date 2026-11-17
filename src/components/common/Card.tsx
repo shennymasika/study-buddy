@@ -18,10 +18,10 @@ export const Card: React.FC<CardProps> = ({
   return (
     <div
       className={`
-        bg-white rounded-2xl p-5 transition-all duration-150
-        ${elevated ? 'border-2 border-slate-200 border-b-4 border-b-slate-300 shadow-sm' : 'border border-slate-200'}
-        ${interactive ? 'cursor-pointer hover:border-slate-300 hover:shadow-md active:translate-y-0.5' : ''}
-        ${selected ? 'border-sky-400 border-b-sky-500 bg-sky-50/40' : ''}
+        bg-white rounded-[22px] p-5 transition-all duration-150
+        ${elevated ? 'border-2 border-[#dbeafe] border-b-4 border-b-[#bfdbfe]' : 'border border-[#dbeafe]'}
+        ${interactive ? 'cursor-pointer hover:border-[#93c5fd] hover:shadow-sm active:translate-y-0.5' : ''}
+        ${selected ? 'border-[#2563eb] border-b-[#1e40af] bg-[#eff6ff]' : ''}
         ${className}
       `}
       {...props}

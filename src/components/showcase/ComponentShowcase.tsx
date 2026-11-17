@@ -1,24 +1,14 @@
 import React, { useState } from 'react';
 import { Button } from '../common/Button';
 import { Card } from '../common/Card';
-import { ProgressBar } from '../common/ProgressBar';
-import { HeartDisplay } from '../gamification/HeartDisplay';
-import { StreakDisplay } from '../gamification/StreakDisplay';
-import { XpDisplay } from '../gamification/XpDisplay';
 import { StatHeader } from '../gamification/StatHeader';
+import { RobotMascot } from '../gamification/RobotMascot';
 import { QuizOption } from '../quiz/QuizOption';
-import { OutOfHeartsModal } from '../quiz/OutOfHeartsModal';
 import { QuizComponent } from '../quiz/QuizComponent';
-import { TopicCard } from '../cards/TopicCard';
-import { LevelCard } from '../cards/LevelCard';
 import { initialQuizData } from '../../data/quizData';
+import trophyImg from '../../assets/trophy.png';
 import {
-  Flame,
-  Heart,
-  Zap,
-  Sparkles,
   RefreshCw,
-  Eye,
   Sliders,
 } from 'lucide-react';
 
@@ -26,46 +16,26 @@ export const ComponentShowcase: React.FC = () => {
   // Gamification interactive test state
   const [hearts, setHearts] = useState(5);
   const [isHeartsShaking, setIsHeartsShaking] = useState(false);
-  const [xp, setXp] = useState(120);
-  const [recentXp, setRecentXp] = useState<number | null>(null);
-  const [streak, setStreak] = useState(4);
-  const [progress, setProgress] = useState(65);
-  const [isOutOfHeartsModalOpen, setIsOutOfHeartsModalOpen] = useState(false);
+  const [xp, setXp] = useState(250);
+  const [streak, setStreak] = useState(7);
+  const [progress, setProgress] = useState(67);
 
-  // Quiz Option standalone demo states
+  // Standalone Option preview state
   const [previewOptionState, setPreviewOptionState] = useState<'idle' | 'selected' | 'correct' | 'incorrect'>('idle');
 
-  // Interactive Quiz live demo state
+  // Interactive Quiz live question index
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const sampleQuestion = initialQuizData.questions[activeQuestionIndex % initialQuizData.questions.length];
 
   const triggerHeartLoss = () => {
     setIsHeartsShaking(true);
     setTimeout(() => setIsHeartsShaking(false), 500);
-    setHearts((prev) => {
-      const next = Math.max(0, prev - 1);
-      if (next === 0) setIsOutOfHeartsModalOpen(true);
-      return next;
-    });
-  };
-
-  const awardXp = (amount = 20) => {
-    setXp((prev) => prev + amount);
-    setRecentXp(amount);
-    setTimeout(() => setRecentXp(null), 1500);
-  };
-
-  const incrementStreak = () => {
-    setStreak((prev) => prev + 1);
-  };
-
-  const resetStreak = () => {
-    setStreak(0);
+    setHearts((prev) => Math.max(0, prev - 1));
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-800 pb-24">
-      {/* Top Header sticky demo */}
+    <div className="min-h-screen bg-[#f1f5f9] text-[#1f2937] pb-24">
+      {/* Top Header */}
       <StatHeader
         hearts={hearts}
         maxHearts={5}
@@ -75,233 +45,102 @@ export const ComponentShowcase: React.FC = () => {
         isHeartsShaking={isHeartsShaking}
       />
 
-      <div className="max-w-5xl mx-auto px-4 pt-8 space-y-12">
-        {/* Banner introduction */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 border-b-4 border-b-slate-300 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-black rounded-full uppercase tracking-wider">
-                Figma Design System Skeleton
-              </span>
-              <span className="text-xs font-bold text-slate-400">Computer Studies Quest</span>
-            </div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-              Reusable Gamified Components
+      <div className="max-w-4xl mx-auto px-4 pt-6 space-y-8">
+        {/* Banner introduction with Robot Mascot */}
+        <div className="bg-white rounded-[26px] p-6 border-2 border-[#dbeafe] border-b-4 border-b-[#bfdbfe] shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 flex-1">
+            <span className="px-3 py-1 bg-[#eff6ff] text-[#2563eb] text-xs font-black rounded-full uppercase tracking-wider border border-[#bfdbfe]">
+              Figma Design System • Pixel Perfect
+            </span>
+            <h1 className="text-3xl font-black text-[#1e3a8a] tracking-tight">
+              Study Buddy Design Library
             </h1>
-            <p className="text-slate-600 font-medium text-sm sm:text-base mt-1">
-              Tactile 3D buttons, interactive cards, status header bar, and quiz states built for the Study Buddy app.
+            <p className="text-[#6b7280] font-medium text-sm">
+              Extracted directly from the Figma project. Features the official Computer Robot mascot, royal blue 3D buttons, and interactive quiz states.
             </p>
           </div>
 
-          {/* Quick interactive sandbox controls */}
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-2.5 min-w-[260px]">
-            <div className="flex items-center gap-1.5 text-xs font-black text-slate-500 uppercase">
-              <Sliders className="w-3.5 h-3.5" />
-              <span>Interactive Controls</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={triggerHeartLoss}
-                className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl border border-rose-200 flex items-center justify-center gap-1"
-              >
-                <Heart className="w-3.5 h-3.5 fill-rose-500" /> -1 Heart
-              </button>
-              <button
-                onClick={() => setHearts(5)}
-                className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-200 flex items-center justify-center gap-1"
-              >
-                <RefreshCw className="w-3.5 h-3.5" /> Reset Hearts
-              </button>
-              <button
-                onClick={() => awardXp(20)}
-                className="px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold rounded-xl border border-purple-200 flex items-center justify-center gap-1"
-              >
-                <Zap className="w-3.5 h-3.5 fill-purple-500" /> +20 XP
-              </button>
-              <button
-                onClick={incrementStreak}
-                className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold rounded-xl border border-amber-200 flex items-center justify-center gap-1"
-              >
-                <Flame className="w-3.5 h-3.5 fill-amber-500" /> +1 Streak
-              </button>
-            </div>
+          {/* Robot Mascot in Hero Banner */}
+          <div className="flex-shrink-0">
+            <RobotMascot size="lg" animated speechBubble="Hi, Joy!" />
           </div>
         </div>
 
-        {/* 1. BUTTONS SECTION */}
+        {/* Quick Sandbox Controls */}
+        <div className="bg-white border-2 border-[#dbeafe] rounded-[22px] p-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs font-black uppercase text-[#1e3a8a]">
+            <Sliders className="w-4 h-4 text-[#2563eb]" />
+            <span>Interactive Tester Controls</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={triggerHeartLoss}
+              className="px-3 py-1.5 bg-[#ffe4e6] text-[#e11d48] text-xs font-bold rounded-xl border border-[#fecdd3] hover:bg-[#fecdd3] transition-colors"
+            >
+              -1 Heart
+            </button>
+            <button
+              onClick={() => setHearts(5)}
+              className="px-3 py-1.5 bg-[#eff6ff] text-[#2563eb] text-xs font-bold rounded-xl border border-[#bfdbfe] hover:bg-[#dbeafe] transition-colors"
+            >
+              Reset Hearts
+            </button>
+            <button
+              onClick={() => setXp((prev) => prev + 30)}
+              className="px-3 py-1.5 bg-[#fef9c3] text-[#ca8a04] text-xs font-bold rounded-xl border border-[#fef08a] hover:bg-[#fef08a] transition-colors"
+            >
+              +30 XP
+            </button>
+            <button
+              onClick={() => setStreak((prev) => prev + 1)}
+              className="px-3 py-1.5 bg-[#fef3c7] text-[#d97706] text-xs font-bold rounded-xl border border-[#fde68a] hover:bg-[#fde68a] transition-colors"
+            >
+              +1 Day Streak
+            </button>
+          </div>
+        </div>
+
+        {/* 1. FIGMA BUTTONS */}
         <section className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div>
-              <h2 className="text-xl font-black text-slate-900">1. Duolingo-Style 3D Buttons</h2>
-              <p className="text-xs font-bold text-slate-500">Tactile bevels, press animations, color variants, and sizes</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Color Variants */}
-            <Card className="space-y-4">
-              <h3 className="font-extrabold text-sm text-slate-700 uppercase tracking-wider">Button Color Variants</h3>
-              <div className="flex flex-wrap gap-3">
-                <Button variant="primary">Primary (Green)</Button>
-                <Button variant="secondary">Secondary (Blue)</Button>
-                <Button variant="amber">Streak (Amber)</Button>
-                <Button variant="danger">Danger (Rose)</Button>
-                <Button variant="outline">Outline</Button>
-                <Button variant="ghost">Ghost</Button>
-                <Button variant="primary" disabled>Disabled State</Button>
-                <Button variant="secondary" isLoading>Processing</Button>
-              </div>
-            </Card>
-
-            {/* Sizes & Full Width */}
-            <Card className="space-y-4">
-              <h3 className="font-extrabold text-sm text-slate-700 uppercase tracking-wider">Sizes & Icons</h3>
-              <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="sm">Small (sm)</Button>
-                <Button variant="primary" size="md">Medium (md)</Button>
-                <Button variant="primary" size="lg">Large (lg)</Button>
-                <Button variant="secondary" size="md" icon={<Sparkles className="w-4 h-4 fill-white" />}>
-                  With Icon
-                </Button>
-              </div>
-              <div className="pt-2">
-                <Button variant="primary" size="lg" fullWidth>
-                  Full Width Call-To-Action Button
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </section>
-
-        {/* 2. HEARTS / XP / STREAK STATUS BAR */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div>
-              <h2 className="text-xl font-black text-slate-900">2. Hearts / XP / Streak Status Displays</h2>
-              <p className="text-xs font-bold text-slate-500">Hover for tooltips, tap to interact with recovery & bonus info</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Hearts Display */}
-            <Card className="flex flex-col items-center justify-center p-6 space-y-3 text-center">
-              <span className="text-xs font-black text-slate-400 uppercase">Hearts & Lives</span>
-              <HeartDisplay currentHearts={hearts} maxHearts={5} isShaking={isHeartsShaking} />
-              <p className="text-xs text-slate-500 font-medium">5 max hearts • Depletes on incorrect answer</p>
-            </Card>
-
-            {/* XP Display */}
-            <Card className="flex flex-col items-center justify-center p-6 space-y-3 text-center">
-              <span className="text-xs font-black text-slate-400 uppercase">Experience Points</span>
-              <XpDisplay xp={xp} recentGain={recentXp} />
-              <p className="text-xs text-slate-500 font-medium">Easy: +10 XP • Med: +20 XP • Hard: +30 XP</p>
-            </Card>
-
-            {/* Streak Display */}
-            <Card className="flex flex-col items-center justify-center p-6 space-y-3 text-center">
-              <span className="text-xs font-black text-slate-400 uppercase">Streak Counter</span>
-              <StreakDisplay streak={streak} />
-              <p className="text-xs text-slate-500 font-medium">+5 bonus XP every 3 consecutive correct</p>
-            </Card>
-          </div>
-
-          {/* Progress Bars */}
+          <h2 className="text-xl font-black text-[#1e3a8a]">1. Figma Tactile 3D Buttons</h2>
           <Card className="space-y-4">
-            <h3 className="font-extrabold text-sm text-slate-700 uppercase tracking-wider">Glossy Progress Bars</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <span className="text-xs font-bold text-slate-500">Quiz Question Progress (Green)</span>
-                <ProgressBar progress={progress} color="green" height="md" showLabel />
-              </div>
-              <div className="space-y-2">
-                <span className="text-xs font-bold text-slate-500">Topic Completion Progress (Blue)</span>
-                <ProgressBar progress={45} color="blue" height="md" showLabel />
-              </div>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="primary" size="lg">Primary Blue (Next →)</Button>
+              <Button variant="secondary" size="lg">Secondary (Topic Map)</Button>
+              <Button variant="amber" size="lg">Amber (Streak / Level)</Button>
+              <Button variant="danger" size="lg">Danger Red</Button>
+              <Button variant="outline" size="lg">Outline</Button>
+              <Button variant="primary" size="lg" disabled>Disabled State</Button>
             </div>
           </Card>
         </section>
 
-        {/* 3. CARDS SECTION */}
+        {/* 2. THE ROBOT & TROPHY GRAPHICS */}
         <section className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div>
-              <h2 className="text-xl font-black text-slate-900">3. Topic & Level Cards</h2>
-              <p className="text-xs font-bold text-slate-500">Curriculum navigation and progression lock/unlock states</p>
-            </div>
-          </div>
+          <h2 className="text-xl font-black text-[#1e3a8a]">2. Figma Mascot & Celebration Graphics</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Robot Mascot Card */}
+            <Card className="flex flex-col items-center justify-center p-6 space-y-3 text-center">
+              <RobotMascot size="lg" animated />
+              <h3 className="font-black text-base text-[#1f2937]">Computer Robot Mascot</h3>
+              <p className="text-xs text-[#6b7280]">Official Study Buddy mascot from Figma</p>
+            </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {initialQuizData.topics.map((topic, index) => (
-              <TopicCard
-                key={topic.topic}
-                topic={topic}
-                progressPercentage={index === 0 ? 66 : 33}
-                isCompleted={index === 0}
-              />
-            ))}
-          </div>
-
-          <div className="pt-2 space-y-3">
-            <h3 className="font-extrabold text-sm text-slate-700 uppercase tracking-wider">Level Progression Cards</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <LevelCard
-                levelInfo={{
-                  level: 1,
-                  name: "Hardware Rookie",
-                  difficulty: "easy",
-                  question_ids: ["HW001"]
-                }}
-                isUnlocked={true}
-                isCompleted={true}
-                starsEarned={3}
-                rewardXp={10}
-              />
-              <LevelCard
-                levelInfo={{
-                  level: 2,
-                  name: "Hardware Explorer",
-                  difficulty: "medium",
-                  question_ids: ["HW002"]
-                }}
-                isUnlocked={true}
-                isCompleted={false}
-                rewardXp={20}
-              />
-              <LevelCard
-                levelInfo={{
-                  level: 3,
-                  name: "Hardware Master",
-                  difficulty: "hard",
-                  question_ids: ["HW003"]
-                }}
-                isUnlocked={false}
-                isCompleted={false}
-                rewardXp={30}
-              />
-            </div>
+            {/* Trophy Celebration Card */}
+            <Card className="flex flex-col items-center justify-center p-6 space-y-3 text-center">
+              <img src={trophyImg} alt="Celebration Trophy" className="w-[180px] h-[147px] object-contain drop-shadow-md" />
+              <h3 className="font-black text-base text-[#1f2937]">Level Complete Trophy</h3>
+              <p className="text-xs text-[#6b7280]">Awarded upon passing level threshold</p>
+            </Card>
           </div>
         </section>
 
-        {/* 4. QUIZ COMPONENT & DIFFERENT STATES */}
+        {/* 3. QUIZ OPTION VISUAL STATES */}
         <section className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div>
-              <h2 className="text-xl font-black text-slate-900">4. Quiz Component & Different States</h2>
-              <p className="text-xs font-bold text-slate-500">
-                Explore all 5 states: Idle, Selected, Correct (with explanation sheet), Incorrect (with correct answer reveal), and Out of Hearts
-              </p>
-            </div>
-          </div>
-
-          {/* Standalone Option State Preview Selector */}
+          <h2 className="text-xl font-black text-[#1e3a8a]">3. Quiz Option Button States</h2>
           <Card className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <h3 className="font-extrabold text-sm text-slate-700 uppercase tracking-wider">
-                  Option Button Visual States
-                </h3>
-                <p className="text-xs text-slate-500">Pick a state to inspect the styling on an isolated option</p>
-              </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#6b7280]">Select a state to test:</span>
               <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
                 {(['idle', 'selected', 'correct', 'incorrect'] as const).map((st) => (
                   <button
@@ -309,8 +148,8 @@ export const ComponentShowcase: React.FC = () => {
                     onClick={() => setPreviewOptionState(st)}
                     className={`px-3 py-1 text-xs font-extrabold rounded-lg capitalize transition-colors ${
                       previewOptionState === st
-                        ? 'bg-white text-slate-800 shadow-sm'
-                        : 'text-slate-500 hover:text-slate-700'
+                        ? 'bg-[#2563eb] text-white shadow-xs'
+                        : 'text-[#6b7280] hover:text-[#1f2937]'
                     }`}
                   >
                     {st}
@@ -332,45 +171,37 @@ export const ComponentShowcase: React.FC = () => {
                 text="Control Unit"
                 state={previewOptionState}
                 isSelected={previewOptionState === 'correct'}
-                isCorrectAnswer={previewOptionState === 'incorrect'} // reveals B is the correct answer
+                isCorrectAnswer={previewOptionState === 'incorrect'}
               />
             </div>
           </Card>
+        </section>
 
-          {/* Full Interactive Live Quiz Sandbox */}
-          <Card className="p-6 space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2">
-                <Eye className="w-5 h-5 text-sky-500" />
-                <h3 className="font-black text-base text-slate-800">
-                  Live Interactive Quiz Engine
-                </h3>
-              </div>
+        {/* 4. LIVE INTERACTIVE QUIZ ENGINE */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-black text-[#1e3a8a]">4. Live Interactive Quiz Engine</h2>
+            <button
+              onClick={() => setActiveQuestionIndex((prev) => prev + 1)}
+              className="text-xs font-extrabold text-[#2563eb] hover:underline flex items-center gap-1"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Next Question
+            </button>
+          </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setActiveQuestionIndex((prev) => prev + 1)}
-                  className="text-xs font-bold text-sky-600 hover:text-sky-700 flex items-center gap-1"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" /> Next Question
-                </button>
-              </div>
-            </div>
-
+          <Card className="p-6">
             <QuizComponent
               key={`${sampleQuestion.id}-${activeQuestionIndex}`}
               question={sampleQuestion}
               questionNumber={(activeQuestionIndex % initialQuizData.questions.length) + 1}
               totalQuestions={initialQuizData.questions.length}
+              remainingHearts={hearts}
               earnedXpForThisLevel={sampleQuestion.level === 1 ? 10 : sampleQuestion.level === 2 ? 20 : 30}
-              isStreakBonusAwarded={(streak + 1) % 3 === 0}
               onAnswerSubmit={(isCorrect) => {
                 if (isCorrect) {
-                  awardXp(sampleQuestion.level === 1 ? 10 : sampleQuestion.level === 2 ? 20 : 30);
-                  incrementStreak();
+                  setXp((prev) => prev + (sampleQuestion.level === 1 ? 10 : sampleQuestion.level === 2 ? 20 : 30));
                 } else {
                   triggerHeartLoss();
-                  resetStreak();
                 }
               }}
               onNextQuestion={() => {
@@ -381,17 +212,6 @@ export const ComponentShowcase: React.FC = () => {
           </Card>
         </section>
       </div>
-
-      {/* Out of Hearts Modal Demo */}
-      <OutOfHeartsModal
-        isOpen={isOutOfHeartsModalOpen}
-        onRefill={() => {
-          setHearts(5);
-          setIsOutOfHeartsModalOpen(false);
-        }}
-        onExit={() => setIsOutOfHeartsModalOpen(false)}
-        recoveryMinutes={30}
-      />
     </div>
   );
 };

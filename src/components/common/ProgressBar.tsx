@@ -2,7 +2,7 @@ import React from 'react';
 
 export interface ProgressBarProps {
   progress: number; // 0 to 100
-  color?: 'green' | 'blue' | 'amber' | 'rose' | 'purple';
+  color?: 'blue' | 'yellow' | 'green' | 'red';
   height?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
   className?: string;
@@ -10,7 +10,7 @@ export interface ProgressBarProps {
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
-  color = 'green',
+  color = 'blue',
   height = 'md',
   showLabel = false,
   className = '',
@@ -18,35 +18,31 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const clampedProgress = Math.min(100, Math.max(0, progress));
 
   const heightClasses = {
-    sm: 'h-2.5',
-    md: 'h-4',
-    lg: 'h-6',
+    sm: 'h-2',
+    md: 'h-3',
+    lg: 'h-4',
   };
 
-  const colorGradients = {
-    green: 'bg-gradient-to-r from-[#58cc02] to-[#46a302]',
-    blue: 'bg-gradient-to-r from-[#1cb0f6] to-[#1899d6]',
-    amber: 'bg-gradient-to-r from-[#ff9600] to-[#e68700]',
-    rose: 'bg-gradient-to-r from-[#ff4b4b] to-[#e53e3e]',
-    purple: 'bg-gradient-to-r from-[#ce82ff] to-[#a855f7]',
+  const colorStyles = {
+    blue: 'bg-[#2563eb]',
+    yellow: 'bg-[#eaa400]',
+    green: 'bg-[#10b981]',
+    red: 'bg-[#ef4444]',
   };
 
   return (
     <div className={`w-full ${className}`}>
       {showLabel && (
-        <div className="flex justify-between items-center text-xs font-bold text-slate-500 mb-1.5">
+        <div className="flex justify-between items-center text-xs font-bold text-[#6b7280] mb-1.5">
           <span>Progress</span>
           <span>{Math.round(clampedProgress)}%</span>
         </div>
       )}
-      <div className={`w-full bg-slate-200/90 rounded-full ${heightClasses[height]} overflow-hidden p-0.5 shadow-inner`}>
+      <div className={`w-full bg-[#dbeafe] rounded-full ${heightClasses[height]} overflow-hidden`}>
         <div
-          className={`h-full rounded-full transition-all duration-300 ease-out relative ${colorGradients[color]}`}
+          className={`h-full rounded-full transition-all duration-300 ease-out ${colorStyles[color]}`}
           style={{ width: `${clampedProgress}%` }}
-        >
-          {/* Subtle glossy shine effect */}
-          <div className="absolute inset-x-0 top-0 h-1/2 bg-white/25 rounded-t-full" />
-        </div>
+        />
       </div>
     </div>
   );

@@ -241,11 +241,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Login • Study Buddy - Computer Studies Quest</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: 'Nunito', system-ui, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
     }
     .btn-3d {
       transition: transform 0.08s ease, box-shadow 0.08s ease;
@@ -254,32 +254,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       transform: translateY(3px);
       box-shadow: none !important;
     }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between p-4">
-  <div class="max-w-md w-full mx-auto my-auto pt-6 pb-8">
+<body class="bg-[#f0f6ff] text-[#1f2937] min-h-screen flex flex-col justify-between p-4">
+  <div class="max-w-md w-full mx-auto my-auto pt-4 pb-8">
     
-    <!-- App Brand Header -->
-    <div class="text-center mb-6">
-      <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-tr from-emerald-400 to-sky-400 text-slate-900 shadow-md border-b-4 border-emerald-600 mb-3">
-        <svg class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-        </svg>
+    <!-- App Brand Header with Robot Mascot -->
+    <div class="text-center mb-5 flex flex-col items-center">
+      <div class="w-[110px] h-[128px] mb-2 animate-float">
+        <img src="src/assets/robot.png" alt="Study Buddy Robot" class="w-full h-full object-contain filter drop-shadow-md" />
       </div>
-      <h1 class="text-3xl font-black text-slate-900 tracking-tight">Study Buddy</h1>
-      <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Computer Studies Quest (IST1020)</p>
+      <h1 class="text-3xl font-black text-[#1e3a8a] tracking-tight">Study Buddy</h1>
+      <p class="text-xs font-bold text-[#6b7280] mt-1">Computer Studies Quest (IST1020)</p>
     </div>
 
     <!-- Main Card -->
-    <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 border-b-4 border-b-slate-300 shadow-md">
+    <div class="bg-white rounded-[26px] p-6 sm:p-8 border-2 border-[#dbeafe] border-b-4 border-b-[#bfdbfe] shadow-md">
       
       <!-- Tab Switcher -->
-      <div class="flex items-center bg-slate-100 p-1 rounded-2xl mb-6">
-        <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-2 rounded-xl text-xs font-black transition-all bg-white text-slate-800 shadow-sm">
+      <div class="flex items-center bg-[#f3f4f6] p-1 rounded-2xl mb-6">
+        <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-2 rounded-xl text-xs font-black transition-all bg-[#2563eb] text-white shadow-sm">
           Sign In
         </button>
-        <button id="tab-register" onclick="switchTab('register')" class="flex-1 py-2 rounded-xl text-xs font-black transition-all text-slate-400 hover:text-slate-700">
+        <button id="tab-register" onclick="switchTab('register')" class="flex-1 py-2 rounded-xl text-xs font-black transition-all text-[#6b7280] hover:text-[#1f2937]">
           Create Account
         </button>
       </div>
@@ -330,7 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <button 
           type="submit" 
-          class="btn-3d w-full mt-2 py-3.5 bg-[#58cc02] hover:bg-[#52be02] text-white font-extrabold text-base rounded-2xl border-b-4 border-[#46a302] shadow-sm select-none"
+          class="btn-3d w-full mt-2 py-3.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-extrabold text-base rounded-2xl border-b-4 border-[#1e40af] shadow-sm select-none"
         >
           Sign In to Quest
         </button>
@@ -437,13 +441,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       const registerForm = document.getElementById('form-register');
 
       if (mode === 'login') {
-        loginTab.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all bg-white text-slate-800 shadow-sm";
-        registerTab.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all text-slate-400 hover:text-slate-700";
+        loginTab.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all bg-[#2563eb] text-white shadow-sm";
+        registerTab.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all text-[#6b7280] hover:text-[#1f2937]";
         loginForm.classList.remove('hidden');
         registerForm.classList.add('hidden');
       } else {
-        registerTab.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all bg-white text-slate-800 shadow-sm";
-        loginTab.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all text-slate-400 hover:text-slate-700";
+        registerTab.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all bg-[#2563eb] text-white shadow-sm";
+        loginTab.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all text-[#6b7280] hover:text-[#1f2937]";
         registerForm.classList.remove('hidden');
         loginForm.classList.add('hidden');
       }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'amber' | 'danger' | 'ghost' | 'outline';
+export type ButtonVariant = 'primary' | 'secondary' | 'amber' | 'danger' | 'ghost' | 'outline' | 'blue-light';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -24,39 +24,41 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
-  // Base 3D tactile button styling inspired by modern gamified apps
-  const baseStyles = 'inline-flex items-center justify-center font-bold tracking-wide rounded-2xl select-none transition-all duration-100 cursor-pointer text-center';
+  const baseStyles = 'inline-flex items-center justify-center font-extrabold select-none transition-all duration-100 cursor-pointer text-center';
 
   const sizeStyles: Record<ButtonSize, string> = {
-    sm: 'text-xs px-3 py-1.5 border-b-[3px]',
-    md: 'text-sm px-5 py-2.5 border-b-4',
-    lg: 'text-base px-6 py-3.5 border-b-4',
-    xl: 'text-lg px-8 py-4 border-b-[5px]',
+    sm: 'text-xs px-3.5 py-2 rounded-[12px] min-h-[38px] border-b-[3px]',
+    md: 'text-sm px-5 py-3 rounded-[14px] min-h-[48px] border-b-4',
+    lg: 'text-[16px] px-6 py-4 rounded-[16px] min-h-[56px] border-b-4',
+    xl: 'text-[18px] px-8 py-4.5 rounded-[18px] min-h-[62px] border-b-[5px]',
   };
 
   const variantStyles: Record<ButtonVariant, string> = {
-    // Duolingo-style vibrant green
+    // Exact Figma Royal Blue action button
     primary:
-      'bg-[#58cc02] hover:bg-[#52be02] text-white border-[#46a302] active:border-b-0 active:translate-y-[4px] shadow-sm',
-    // Sky blue
+      'bg-[#2563eb] hover:bg-[#1d4ed8] text-white border-[#1e40af] active:border-b-2 active:translate-y-[2px] shadow-sm',
+    // Exact Figma White secondary button with #dbeafe border
     secondary:
-      'bg-[#1cb0f6] hover:bg-[#1899d6] text-white border-[#147eb2] active:border-b-0 active:translate-y-[4px] shadow-sm',
-    // Fiery amber / streak
+      'bg-white hover:bg-slate-50 text-[#1f2937] border-2 border-[#dbeafe] border-b-4 border-b-[#93c5fd] active:border-b-2 active:translate-y-[2px] shadow-sm',
+    // Warm Amber / Streak button
     amber:
-      'bg-[#ff9600] hover:bg-[#e68700] text-white border-[#cc7800] active:border-b-0 active:translate-y-[4px] shadow-sm',
-    // Rose / error
+      'bg-[#eaa400] hover:bg-[#d97706] text-white border-[#b45309] active:border-b-2 active:translate-y-[2px] shadow-sm',
+    // Danger / Red button
     danger:
-      'bg-[#ff4b4b] hover:bg-[#e53e3e] text-white border-[#cc2c2c] active:border-b-0 active:translate-y-[4px] shadow-sm',
-    // Subtle ghost
+      'bg-[#ef4444] hover:bg-[#dc2626] text-white border-[#b91c1c] active:border-b-2 active:translate-y-[2px] shadow-sm',
+    // Light Blue pill/button
+    'blue-light':
+      'bg-[#eff6ff] hover:bg-[#dbeafe] text-[#2563eb] border-2 border-[#bfdbfe] border-b-4 border-b-[#93c5fd] active:border-b-2 active:translate-y-[2px]',
+    // Ghost
     ghost:
-      'bg-transparent hover:bg-slate-100 text-slate-700 border-b-0 active:translate-y-[1px]',
-    // Outlined
+      'bg-transparent hover:bg-slate-100 text-[#6b7280] border-b-0 active:translate-y-[1px]',
+    // Outline
     outline:
-      'bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-200 border-b-4 border-b-slate-300 active:border-b-2 active:translate-y-[2px]',
+      'bg-white hover:bg-slate-50 text-[#1f2937] border-2 border-[#dbeafe] border-b-4 border-b-[#93c5fd] active:border-b-2 active:translate-y-[2px]',
   };
 
   const disabledStyles =
-    'bg-slate-200 text-slate-400 border-b-4 border-slate-300 cursor-not-allowed hover:bg-slate-200 active:translate-y-0 active:border-b-4 shadow-none opacity-80';
+    'bg-slate-200 text-slate-400 border-b-4 border-slate-300 cursor-not-allowed hover:bg-slate-200 active:translate-y-0 active:border-b-4 shadow-none opacity-70';
 
   const widthStyle = fullWidth ? 'w-full' : '';
 
