@@ -29,13 +29,15 @@ import {
   RotateCcw,
 } from 'lucide-react';
 
-export const QuestAppFlow: React.FC = () => {
+type QuestAppFlowProps = { studentName?: string };
+
+export const QuestAppFlow: React.FC<QuestAppFlowProps> = ({ studentName: signedInName }) => {
   // Navigation Screens: 'home' | 'topics' | 'levels' | 'quiz' | 'result' | 'leaderboard'
   const [currentScreen, setCurrentScreen] = useState<'home' | 'topics' | 'levels' | 'quiz' | 'result' | 'leaderboard'>('home');
 
   // Check for PHP session user if running under PHP backend
   const phpUser = typeof window !== 'undefined' && (window as any).PHP_USER ? (window as any).PHP_USER : null;
-  const studentName = phpUser?.username || 'Joy';
+  const studentName = phpUser?.username || signedInName || 'Joy';
   const initialInitial = studentName.charAt(0).toUpperCase();
 
   // Player Game State (matching Figma defaults: 250 XP, 5/5 hearts, 7-day streak)

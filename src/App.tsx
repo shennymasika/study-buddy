@@ -1,10 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ComponentShowcase } from './components/showcase/ComponentShowcase';
 import { QuestAppFlow } from './components/flow/QuestAppFlow';
-import { Layers, Smartphone, GraduationCap } from 'lucide-react';
+import { LoginScreen } from './components/auth/LoginScreen';
+import { Layers, Smartphone, GraduationCap, LogOut } from 'lucide-react';
+
+type User = { username: string; student_id?: string; local_only?: boolean };
+
+function storedLocalUser(): User | null {
+  try { return JSON.parse(localStorage.getItem('studyBuddyLocalUser') || 'null'); }
+  catch { return null; }
+}
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'app' | 'showcase'>('app');
+  const phpUser = (window as Window & { PHP_USER?: User }).PHP_USER ?? null;
+  const [user, setUser] = useState<User | null>(phpUser ?? storedLocalUser());
+  const [checkingSession, setCheckingSession] = useState(!user);
+
+  useEffect(() => {
+    if (user) return;
+    fetch('index.php?api=me', { credentials: 'same-origin' })
+      .then(response => response.ok ? response.json() : null)
+      .then(result => { if (result?.logged_in && result.user) setUser(result.user); })
+      .catch(() => {})
+      .finally(() => setCheckingSession(false));
+  }, [user]);
+
+  if (checkingSession) return <div className="min-h-screen flex items-center justify-center bg-[#f0f6ff] text-sm font-bold text-blue-900">Loading Study Buddy…</div>;
+  if (!user) return <LoginScreen onSignedIn={(signedInUser) => signedInUser ? setUser(signedInUser) : window.location.reload()} />;
+
+  function signOut() {
+    if (user?.local_only) {
+      localStorage.removeItem('studyBuddyLocalUser');
+      setUser(null);
+    } else {
+      window.location.href = 'logout.php';
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#f1f5f9]">
@@ -23,6 +55,11 @@ export function App() {
                 Pixel-Perfect Figma Prototype (IST1020)
               </span>
             </div>
+          </div>
+
+          <div className="flex items-center gap-3 text-xs font-bold text-blue-100">
+            <span>Hi, {user.username}</span>
+            <button onClick={signOut} className="inline-flex items-center gap-1.5 rounded-lg bg-blue-800 px-3 py-2 text-white hover:bg-blue-700"><LogOut className="h-3.5 w-3.5"/> Sign out</button>
           </div>
 
           {/* View Mode Switcher */}
@@ -56,7 +93,7 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {activeTab === 'app' ? <QuestAppFlow /> : <ComponentShowcase />}
+        {activeTab === 'app' ? <QuestAppFlow studentName={user.username} /> : <ComponentShowcase />}
       </main>
     </div>
   );

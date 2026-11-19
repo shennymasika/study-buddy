@@ -3,13 +3,21 @@
 session_start();
 require_once __DIR__ . '/db.php';
 
-// 1. Session Protection Check
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+// API session lookup is public so the React frontend can decide which screen to show.
+if (isset($_GET['api']) && $_GET['api'] === 'me' && !isset($_SESSION['user_id'])) {
+    header('Content-Type: application/json');
+    echo json_encode(['logged_in' => false]);
     exit;
 }
 
-$userId = $_SESSION['user_id'];
+// Keep progress endpoints protected.
+if (isset($_GET['api']) && !isset($_SESSION['user_id'])) {
+    header('Content-Type: application/json', true, 401);
+    echo json_encode(['error' => 'Please sign in first.']);
+    exit;
+}
+
+$userId = $_SESSION['user_id'] ?? null;
 $studentId = $_SESSION['student_id'] ?? 'STU1020';
 $username = $_SESSION['username'] ?? 'Cadet Student';
 $email = $_SESSION['email'] ?? '';
@@ -79,6 +87,21 @@ if (isset($_GET['api'])) {
     }
 
     echo json_encode(['error' => 'Unknown API route']);
+    exit;
+}
+
+// Let the React app render its sign-in screen before a session exists.
+if (!isset($_SESSION['user_id'])) {
+    $distIndexPath = __DIR__ . '/dist/index.html';
+    if (file_exists($distIndexPath)) {
+        $html = file_get_contents($distIndexPath);
+        $html = str_replace('src="./assets/', 'src="./dist/assets/', $html);
+        $html = str_replace('href="./assets/', 'href="./dist/assets/', $html);
+        echo $html;
+        exit;
+    }
+    http_response_code(503);
+    echo 'Build the frontend with npm run build to use the Study Buddy sign-in screen.';
     exit;
 }
 
